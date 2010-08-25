@@ -14,11 +14,28 @@ describe UsersController do
       get 'new'
       response.should be_success
     end
+
+    it "should have the right title" do
+      get 'new'
+      response.should have_tag("title", /Sign up/)
+    end
   end
 
-  it "should have the right title" do
-    get 'new'
-    response.should have_tag("title", /Sign up/)
+  describe "GET 'show'" do
+    before(:each) do
+      @user = mock_model(User, :name => "Stevie",
+                               :email => "sd@yahoo.com",
+                               :password => "foobar",
+                               :password_confirmation => "foobar"  )
+      # Arrange for User.find(params[:id]) to find the right user.
+      User.stub!(:find, @user.id).and_return(@user)
+    end
+
+    it "should be successful" do
+      get :show, :id => @user
+      response.should be_success
+    end
   end
+
 end
 
